@@ -11,8 +11,8 @@ SQLCrypt remedies these problems by allowing attributes to be specified as encry
 encryption functions.
 
 Right now, the only database encryption function supported is MySQL aes_encrypt/aes_decrypt, which
-expects the database column for the field to be of type string. See "Extending" below for how to 
-support other databases. 
+expects the database column for the field to be of type string. See "Extending" below for how to
+support other databases.
 
 
 Example
@@ -31,7 +31,7 @@ and retrieved using
 aes_decrypt(unhex(balance), 'my_secret_key_#{id}')
 
 
-id is the primary key of the account; this guarantees that the same value will encrypt to different 
+id is the primary key of the account; this guarantees that the same value will encrypt to different
 results in different records (thus making deducing anything from database inspection more difficult).
 
 You can specify multiple fields on the same line if they are using the same key; use separate lines for different keys. For example,
@@ -44,17 +44,17 @@ will encrypt "cc_number" and "ssn" using the key 'fIn^nce-dan{}er' and "password
 You can also specify a function to convert the encrypted field to the type you want (otherwise it will default to String). For example
 
 	sql_encrypted :balance, :key => 'finstuff', converter => :to_f
-	
+
 will run to_f on the String that is returned from decryption, so that the final attribute value is of type Float.
 
 
 Extending
 =========
 
-Support for additional databases can be added by adding a module named "<database_adapter_name>_encryption" 
+Support for additional databases can be added by adding a module named "<database_adapter_name>_encryption"
 to the lib/adapters directory. The module must implement two methods:
 
-encryption_find(name, key, options) to specify the SQL for reading the column 
+encryption_find(name, key, options) to specify the SQL for reading the column
 encryption_set(name, key, options) to specify the SQL for persisting to the column
 
 where "name" is the field name of the attribute and "key" is the secret key specified in sql_encrypted.
@@ -63,4 +63,6 @@ SQLCrypt automatically tries to load the module that corresponds with the name o
 the ActiveRecord class using it. If the adapter is not present, an error is thrown.
 
 
-Copyright (c) 2009 Monica McArthur (mechaferret@gmail.com), released under the MIT license
+Copyright (c) 2012 Monica McArthur (mechaferret@gmail.com), Mikhail Shakhanov (mshakhan@gmail.com),
+released under the MIT license
+
