@@ -1,9 +1,9 @@
 sqlite:
   :adapter: sqlite
-  :dbfile: state_machine.sqlite.db
+  :database: state_machine.sqlite.db
 sqlite3:
   :adapter: sqlite3
-  :dbfile: state_machine.sqlite3.db
+  :database: state_machine.sqlite3.db
 postgresql:
   :adapter: postgresql
   :username: postgres
@@ -11,8 +11,9 @@ postgresql:
   :database: state_machine_test
   :min_messages: ERROR
 mysql:
-  :adapter: mysql
+  :adapter: mysql2
   :host: localhost
   :username: root
-  :password: root
+  :password: testblabla
   :database: sql_crypt_test
+

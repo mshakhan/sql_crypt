@@ -7,5 +7,5 @@ ActiveRecord::Schema.define(:version => 4) do
 		t.column :balance_as_float, :string
 		t.column :normal_attribute, :string
   end
-  
 end
+

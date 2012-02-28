@@ -3,7 +3,7 @@ include SQLCrypt
 require 'fixtures/account.rb'
 
 class SqlCryptTest < ActiveSupport::TestCase
-  
+
   test "no key raises exception" do
     assert_raise(NoEncryptionKey) {
       Account.sql_encrypted(:balance, {})
@@ -12,7 +12,7 @@ class SqlCryptTest < ActiveSupport::TestCase
 
   test "each encrypted attribute is added when added in sequence" do
     # :balance is encrypted in model class definition
-		assert Account.encrypteds.size==2
+		assert Account.encrypteds.size == 2
 		assert Account.encrypteds.first[:name] == :balance
 		assert Account.encrypteds.first[:key] == 'test1'
     Account.sql_encrypted(:name, :key => 'test2')
@@ -22,7 +22,7 @@ class SqlCryptTest < ActiveSupport::TestCase
 		assert Account.encrypteds.last[:name] == :name
 		assert Account.encrypteds.last[:key] == 'test2'
   end
-  
+
   test "multiple encrypted attributes can be added" do
     Account.sql_encrypted(:acct_number, :password, :key => 'test4')
 		assert Account.encrypteds.size==5
@@ -31,20 +31,20 @@ class SqlCryptTest < ActiveSupport::TestCase
 		assert Account.encrypteds.last[:name] == :password
 		assert Account.encrypteds.last[:key] == 'test4'
   end
-  
+
   test "encrypted attribute is stored locally" do
 		acc = Account.new
 		acc.balance = '100'
 		assert acc.read_encrypted_value("balance_decrypted")=='100'
   end
-  
+
   test "encrypted attribute is retrieved from the right place" do
 		acc = Account.new
 		acc.balance = '100'
 		assert acc.balance=='100'
 		assert acc.balance==acc.read_encrypted_value("balance_decrypted")
   end
-  
+
   test "encrypted attribute is persisted to database" do
 		acc = Account.new
 		acc.balance = '100'
@@ -53,7 +53,7 @@ class SqlCryptTest < ActiveSupport::TestCase
 		expected = acc.connection.select_value("select hex(aes_encrypt('100','test1_#{acc.id}'))")
 		assert fetched_from_db==expected
   end
-  
+
   test "encrypted attribute is retrieved from database" do
 		acc = Account.new
 		acc.balance = '100'
@@ -135,3 +135,4 @@ class SqlCryptTest < ActiveSupport::TestCase
   end
 
 end
+

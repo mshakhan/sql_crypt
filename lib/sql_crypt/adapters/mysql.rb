@@ -9,6 +9,7 @@ module SQLCrypt
 		    "#{name}=hex(aes_encrypt('#{self.read_encrypted_value("#{name}_decrypted")}', '#{key}_#{self.id}'))"
 	    end
     end
+    Mysql2 = MySQL
   end #Adapters
 end #SqlCrypt
 
