@@ -1,12 +1,9 @@
-module SQLCrypt
-	Dir[File.dirname(__FILE__) + '/adapters/*.rb'].each{|g| require g}  
+require 'sql_crypt/version.rb'
+require 'sql_crypt/exceptions.rb'
+require 'sql_crypt/adapters/mysql.rb'
 
-	class NoEncryptionKey < Exception #:nodoc:
-  end
-	
-	class NoAdapterFound < Exception #:nodoc:
-  end
-	
+module SQLCrypt
+
 	def self.included(base)
     base.extend ClassMethods
   end
@@ -18,10 +15,11 @@ module SQLCrypt
       include InstanceMethods
       include InstanceMethods::SQLCryptMethods
 			begin
-				include "#{self.connection.adapter_name}Encryption".constantize
+				include "SQLCrypt::Adapters::#{self.connection.adapter_name}".constantize
 			rescue
 				raise NoAdapterFound.new(self.connection.adapter_name)
 			end
+
 			define_method (:after_find) { } unless method_defined?(:after_find)
 			after_find :find_encrypted
 			after_save :save_encrypted
@@ -31,15 +29,15 @@ module SQLCrypt
 			self.converters = Hash.new
 			@@sql_crypt_initialized = true
 		end
-		
+
 		def sql_encrypted(*args)
-			raise NoEncryptionKey unless args.last[:key]			
+			raise NoEncryptionKey unless args.last[:key]
 			self.initialize_sql_crypt
 			secret_key = args.last[:key]
 			decrypted_converter = args.last[:converter]
 			args.delete args.last
-			
-			args.each { |name| 
+
+			args.each { |name|
 			  attr_protected name
   			self.encrypteds << {:name=>name, :key=>secret_key}
 				self.converters[name] = decrypted_converter
@@ -55,7 +53,7 @@ module SQLCrypt
       }
 		end
 	end
-	
+
 	module InstanceMethods
 	  def find_encrypted
 			encrypted_find = self.class.encrypteds.collect{|y| encryption_find(y[:name], y[:key])}.join(',')
@@ -68,17 +66,17 @@ module SQLCrypt
 			return if encrypted_save.blank? # no changes to save
 	    connection.execute("update #{self.class.table_name} set #{encrypted_save} where #{self.class.primary_key}=#{self.id}")
 	  end
-	
+
 		def convert(name, value)
 			converter = self.class.converters[name.to_sym]
-			converter.nil? ? value : value.send(converter)		
+			converter.nil? ? value : value.send(converter)
 		end
-		
+
 		module SQLCryptMethods
 			def read_encrypted_value(name)
 				@sql_crypt_data[name] rescue nil
 			end
-			
+
 			def write_encrypted_value(name, value, check_changed=true)
 				@sql_crypt_data = Hash.new if @sql_crypt_data.nil?
 				@sql_crypt_changed = Hash.new if @sql_crypt_changed.nil?
@@ -94,19 +92,25 @@ module SQLCrypt
   			end
 				@sql_crypt_data[name] = value
 			end
-			
+
 			def encrypted_orig_value(name)
 			  @sql_crypt_changed[name][:old] rescue read_encrypted_value(name)
 			end
-			
+
 			def encrypted_changed?(name)
 			  @sql_crypt_changed["#{name}_decrypted"] rescue false
 			end
-			
+
 			def enc_chg
 			  @sql_crypt_changed
 			end
 		end
 	end
-	
+
 end
+
+# include in AR
+ActiveSupport.on_load(:active_record) do
+  ActiveRecord::Base.send(:include, SQLCrypt)
+end
+

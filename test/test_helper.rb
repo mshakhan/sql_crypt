@@ -1,23 +1,10 @@
-require 'test/unit'
-require 'rubygems'
-require 'active_record'
-require 'active_record/fixtures'
-require 'active_support'
-require 'active_support/test_case'
-require 'sql_crypt'
+# Configure Rails Environment
+ENV["RAILS_ENV"] = "test"
 
-config = YAML::load(IO.read(File.dirname(__FILE__) + '/database.yml'))
-ActiveRecord::Base.logger = Logger.new(File.dirname(__FILE__) + "/debug.log")
-ActiveRecord::Base.configurations = {'test' => config[ENV['DB'] || 'mysql']}
-ActiveRecord::Base.establish_connection(ActiveRecord::Base.configurations['test'])
+require File.expand_path("../dummy/config/environment.rb",  __FILE__)
+require "rails/test_help"
 
-load(File.dirname(__FILE__) + "/schema.rb")
+Rails.backtrace_cleaner.remove_silencers!
 
-class ActiveSupport::TestCase
-  include ActiveRecord::TestFixtures
-  self.fixture_path = File.dirname(__FILE__) + "/fixtures"
-  self.use_transactional_fixtures = false
-  self.use_instantiated_fixtures = false
-  fixtures :all
-
-end
+# Load support files
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
