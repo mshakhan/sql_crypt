@@ -43,7 +43,7 @@ module SQLCrypt
 				self.converters[name] = decrypted_converter
         module_eval <<-"end_eval"
           def #{name}
-  					self.read_encrypted_value("#{name}_decrypted")
+  					self.read_encrypted_value("#{name}_decrypted").force_encoding("UTF-8")
   				end
 
           def #{name}=(value)

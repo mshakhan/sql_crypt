@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sql_crypt (0.0.1)
+    sql_crypt (0.0.2)
       rails (~> 3.2.1)
 
 GEM
