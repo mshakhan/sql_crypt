@@ -38,9 +38,9 @@ You can specify multiple fields on the same line if they are using the same key;
 
 will encrypt +cc_number+ and +ssn+ using the key 'fIn^nce-dan{}er' and +password+ using the key 'password'.
 
-You can also specify a function to convert the encrypted field to the type you want (otherwise it will default to String). For example
+You can also specify a function to convert the encrypted field to the type you want (otherwise it will default to String). For example,
 
-	sql_encrypted :balance, :key => 'finstuff', converter => :to_f
+  sql_encrypted :balance, :key => 'finstuff', converter => :to_f
 
 will run +to_f+ on the string that is returned from decryption, so that the final attribute value is of type float.
 
