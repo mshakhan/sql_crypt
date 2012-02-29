@@ -15,13 +15,13 @@ load(File.dirname(__FILE__) + "/schema.rb")
 
 class ActiveSupport::TestCase
 
-  include ActiveRecord::TestFixtures
-  self.fixture_path = File.dirname(__FILE__) + "/fixtures"
-  self.use_transactional_fixtures = false
-  self.use_instantiated_fixtures = false
+   include ActiveRecord::TestFixtures
+   self.fixture_path = File.dirname(__FILE__) + "/fixtures"
+   self.use_transactional_fixtures = false
+   self.use_instantiated_fixtures = false
 
-  fixtures :all
+   fixtures :all
 
-  @@expectations = YAML::load(IO.read(File.dirname(__FILE__) + '/expected_by_db.yml'))
+   @@expectations = YAML::load(IO.read(File.dirname(__FILE__) + '/expected_by_db.yml'))
 end
 
