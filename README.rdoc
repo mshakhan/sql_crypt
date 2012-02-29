@@ -42,7 +42,7 @@ You can also specify a function to convert the encrypted field to the type you w
 
   sql_encrypted :balance, :key => 'finstuff', converter => :to_f
 
-will run +to_f+ on the string that is returned from decryption, so that the final attribute value is of type float.
+will run +to_f+ on the String that is returned from decryption, so that the final attribute value is of type Float.
 
 
 === Extending
