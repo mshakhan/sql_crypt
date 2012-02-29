@@ -1,5 +1,4 @@
-SQLCrypt
-========
+=== SQLCrypt
 
 Lots of ActiveRecord attributes need encryption (passwords, salary information, account balances, etc.)
 Typically this encryption is handled in Ruby code. However, there are two problems with this: it can be slow,
@@ -15,23 +14,21 @@ expects the database column for the field to be of type string. See "Extending" 
 support other databases.
 
 
-Example
-=======
+=== Example
 
-class Account < ActiveRecord::Base
-  sql_encrypted :balance, :key => 'my_secret_key'
-
+  class Account < ActiveRecord::Base
+    sql_encrypted :balance, :key => 'my_secret_key'
+  end
 
 For the MySQL adapter, this will cause the "balance" field to be stored as
 
-hex(aes_encrypt(actual_balance, 'my_secret_key_#{id}'))
+  hex(aes_encrypt(actual_balance, 'my_secret_key_#{id}'))
 
 and retrieved using
 
-aes_decrypt(unhex(balance), 'my_secret_key_#{id}')
+  aes_decrypt(unhex(balance), 'my_secret_key_#{id}')
 
-
-id is the primary key of the account; this guarantees that the same value will encrypt to different
++id+ is the primary key of the account; this guarantees that the same value will encrypt to different
 results in different records (thus making deducing anything from database inspection more difficult).
 
 You can specify multiple fields on the same line if they are using the same key; use separate lines for different keys. For example,
@@ -39,30 +36,38 @@ You can specify multiple fields on the same line if they are using the same key;
   sql_encrypted :cc_number, :ssn, :key => 'fIn^nce-dan{}er'
   sql_encrypted :password, :key => 'password'
 
-will encrypt "cc_number" and "ssn" using the key 'fIn^nce-dan{}er' and "password" using the key 'password'.
+will encrypt +cc_number+ and +ssn+ using the key 'fIn^nce-dan{}er' and +password+ using the key 'password'.
 
 You can also specify a function to convert the encrypted field to the type you want (otherwise it will default to String). For example
 
 	sql_encrypted :balance, :key => 'finstuff', converter => :to_f
 
-will run to_f on the String that is returned from decryption, so that the final attribute value is of type Float.
+will run +to_f+ on the string that is returned from decryption, so that the final attribute value is of type float.
 
 
-Extending
-=========
+=== Extending
+
 
 Support for additional databases can be added by adding a module named "<database_adapter_name>_encryption"
 to the lib/adapters directory. The module must implement two methods:
 
-encryption_find(name, key, options) to specify the SQL for reading the column
-encryption_set(name, key, options) to specify the SQL for persisting to the column
+  encryption_find(name, key, options)
 
-where "name" is the field name of the attribute and "key" is the secret key specified in sql_encrypted.
+to specify the SQL for reading the column
+
+  encryption_set(name, key, options)
+
+to specify the SQL for persisting to the column
+
+where +name+ is the field name of the attribute and +key+ is the secret key specified in sql_encrypted.
 
 SQLCrypt automatically tries to load the module that corresponds with the name of the database adapter for
 the ActiveRecord class using it. If the adapter is not present, an error is thrown.
 
+=== Licence & Copyright
+Copyright (c) 2012
+- Monica McArthur (mechaferret@gmail.com)
+- Mikhail Shakhanov (mshakhan@gmail.com)
 
-Copyright (c) 2012 Monica McArthur (mechaferret@gmail.com), Mikhail Shakhanov (mshakhan@gmail.com),
-released under the MIT license
+Released under the MIT license
 
