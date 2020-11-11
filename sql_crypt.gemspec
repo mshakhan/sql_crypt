@@ -24,7 +24,8 @@ Gem::Specification.new do |s|
   s.add_dependency "rails", "~> 6.0.3"
   s.add_dependency 'activerecord', '~> 6.0.3'
   s.add_dependency "mysql2"
-  s.add_dependency 'protected_attributes_continued'
+  s.add_dependency "sqlite3"
+  # s.add_dependency 'protected_attributes_continued'
 
 
   s.add_development_dependency 'rake', '>= 13.0.1'

@@ -3,7 +3,7 @@ include SQLCrypt
 require 'fixtures/account.rb'
 
 class SqlCryptTest < ActiveSupport::TestCase
-  test_order = :sorted
+  test_order = :alpha
 
   test "01 no key raises exception" do
     assert_raise(NoEncryptionKey) {
@@ -126,13 +126,13 @@ class SqlCryptTest < ActiveSupport::TestCase
     assert acc2.normal_attribute == 'hello'
   end
 
-  test "14 encrypted attribute cannot be mass-assigned" do
-    acc = Account.new({:normal_attribute=>'what', :balance=>'10'})
-    assert acc.normal_attribute == 'what'
-    assert acc.balance.nil?
-    # Now assign it normally
-    acc.balance = '10'
-    assert acc.balance == '10'
-  end
+  # test "14 encrypted attribute cannot be mass-assigned" do
+  #   acc = Account.new({:normal_attribute=>'what', :balance=>'10'})
+  #   assert acc.normal_attribute == 'what'
+  #   assert acc.balance.nil?
+  #   # Now assign it normally
+  #   acc.balance = '10'
+  #   assert acc.balance == '10'
+  # end
 
 end

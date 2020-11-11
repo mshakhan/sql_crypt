@@ -2,7 +2,10 @@ PATH
   remote: .
   specs:
     sql_crypt (0.0.2)
+      activerecord (~> 6.0.3)
+      mysql2
       rails (~> 6.0.3)
+      sqlite3
 
 GEM
   remote: http://rubygems.org/
@@ -86,8 +89,6 @@ GEM
     nio4r (2.5.4)
     nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
-    protected_attributes_continued (1.7.0)
-      activemodel (>= 5.0)
     rack (2.2.3)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
@@ -139,12 +140,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord (~> 6.0.3)
-  mysql2
-  protected_attributes_continued
   rake (>= 13.0.1)
   sql_crypt!
-  sqlite3
 
 BUNDLED WITH
    2.1.4

@@ -48,7 +48,7 @@ module SQLCrypt
       args.delete args.last
 
       args.each do |name|
-        attr_protected(name)
+        # attr_protected(name)
         self.encrypted_fields << { :name => name, :key => secret_key}
         self.converters[name] = decrypted_converter
         module_eval <<-"ATTRIBUTE_ACCESSORS", __FILE__, __LINE__
@@ -137,7 +137,8 @@ module SQLCrypt
       end
 
       def encrypted_changed?(name)
-        @sql_crypt_changed && @sql_crypt_changed["#{name}_decrypted"]
+        @sql_crypt_changed &&
+          @sql_crypt_changed["#{name}_decrypted"]
       end
     end # SQLCryptMethods
   end # InstanceMethods
