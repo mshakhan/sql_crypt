@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.summary     = "Simple encoding support for models."
   s.description = "Provides field encoding  support for ActiveRecord models."
 
-  s.required_ruby_version = ">= 1.8.7"
-  s.required_rubygems_version = ">= 1.3.6"
+  s.required_ruby_version = ">= 2.7.2"
+  s.required_rubygems_version = ">= 3.1.4"
 
   s.authors = ["Monica McArthur", "Mikhail Shakhanov"]
   s.email = ["mechaferret@gmail.com", "mshakhan@gmail.com"]
@@ -21,11 +21,7 @@ Gem::Specification.new do |s|
 
   s.license = 'MIT'
 
-  s.add_dependency "rails", "~> 3.2.1"
+  s.add_dependency "rails", "~> 6.0.3"
 
-  s.add_development_dependency 'rake', '>= 0.9.2'
-  s.add_development_dependency 'activerecord', '~> 3.2.1'
-  s.add_development_dependency "sqlite3"
-  s.add_development_dependency "mysql2"
+  s.add_development_dependency 'rake', '>= 13.0.1'
 end
-

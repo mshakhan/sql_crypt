@@ -10,10 +10,9 @@ postgresql:
   :password: postgres
   :database: state_machine_test
   :min_messages: ERROR
-mysql:
+mysql2:
   :adapter: mysql2
   :host: localhost
   :username: root
   :password: testblabla
   :database: sql_crypt_test
-

@@ -76,7 +76,7 @@ module SQLCrypt
       end.join(',')
 
       # TODO: move to the adapter
-      encrypted_fields = connection.select_one <<-"SQL"
+      encrypted_fields = self.class.connection.select_one <<-"SQL"
       select #{encrypted_find}
         from #{self.class.table_name}
         where #{self.class.primary_key} = #{self.id}
@@ -95,7 +95,7 @@ module SQLCrypt
 
       return if encrypted_save.blank? # no changes to save
       # TODO: move to the adapter
-      connection.execute <<-"SQL"
+      self.class.connection.execute <<-"SQL"
       update #{self.class.table_name}
         set #{encrypted_save}
         where #{self.class.primary_key} = #{self.id}
@@ -109,12 +109,13 @@ module SQLCrypt
 
     module SQLCryptMethods
       def read_encrypted_value(name)
-        @sql_crypt_data && @sql_crypt_data[name]
+        @sql_crypt_data &&
+          @sql_crypt_data[name]
       end
 
       def write_encrypted_value(name, value, check_changed = true)
-        @sql_crypt_data     = {} unless @sql_crypt_data
-        @sql_crypt_changed  = {} unless @sql_crypt_changed
+        @sql_crypt_data ||= {}
+        @sql_crypt_changed ||= {}
 
         if check_changed
           old_value = encrypted_orig_value(name)
@@ -146,4 +147,3 @@ end # SQLCrypt
 ActiveSupport.on_load(:active_record) do
   ActiveRecord::Base.send(:include, SQLCrypt)
 end
-
